@@ -15,6 +15,7 @@
         <slf4j.version>1.7.30</slf4j.version>
         <maven-compiler.version>3.8.0</maven-compiler.version>
         <maven-assembly.version>3.2.0</maven-assembly.version>
+        <maven-failsafe.version>2.22.2</maven-failsafe.version>
         <encoding>UTF-8</encoding>
     </properties>
 
@@ -75,6 +76,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe.version}</version>
+                <configuration>
+                    <systemProperties>
+                        <surefire.rerunFailingTestsCount>1</surefire.rerunFailingTestsCount>
+                    </systemProperties>
+                </configuration>
             </plugin>
         </plugins>
     </build>
