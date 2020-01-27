@@ -2,8 +2,8 @@ package businesstest;
 
 import cucumber.api.CucumberOptions;
 import net.serenitybdd.cucumber.CucumberWithSerenity;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 @RunWith(CucumberWithSerenity.class)
@@ -14,5 +14,15 @@ import org.junit.runner.RunWith;
 )
 
 public class TestRunner {
+
+    @BeforeClass
+    public static void setUp() {
+//        SomeEnvironmentManagementClass.someDeleteAllDataMethod(); // Won't implement due to shared environment
+    }
+
+    @AfterClass
+    public static void tearDown() {
+//        SomeEnvironmentManagementClass.someDeleteAllDataMethod(); // Won't implement due to shared environment
+    }
 }
 
