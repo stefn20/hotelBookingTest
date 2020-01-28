@@ -16,6 +16,38 @@ public class BookingStepDefinitions {
 
     @Given("^user adds a new booking")
     public void userAddsANewBooking() {
+        addBooking();
+    }
+
+    @Then("^the booking (is|is not) displayed in the bookings list")
+    public void theBookingIsOrIsNotDisplayedInTheBookingsList(String expected) {
+        if (expected.equalsIgnoreCase("is")) {
+            assertThat(isBookingDisplayed()).isTrue();
+        } else {
+            assertThat(isBookingDisplayed()).isFalse();
+        }
+    }
+
+    @When("^the user deletes the booking")
+    public void theUserDeletesTheBooking() {
+        Booking booking = Serenity.sessionVariableCalled("booking");
+
+        bookingsPage.open();
+        bookingsPage.deleteBooking(booking);
+    }
+
+    @Given("^there is an existing booking$")
+    public void thereIsAnExistingBooking() {
+        addBooking();
+        assertThat(isBookingDisplayed()).isTrue();
+    }
+
+    @After
+    public void teardown() {
+        bookingsPage.deleteAllBookingsForTearDown();
+    }
+
+    private void addBooking() {
         Booking booking = Booking.withRandomPrice();
         Serenity.setSessionVariable("booking").to(booking);
 
@@ -30,30 +62,10 @@ public class BookingStepDefinitions {
         );
     }
 
-    @Then("^the booking (is|is not) displayed in the bookings list")
-    public void theBookingIsDisplayedInTheBookingsList(String expected) throws InterruptedException {
+    private boolean isBookingDisplayed() {
         Booking booking = Serenity.sessionVariableCalled("booking");
 
         bookingsPage.open();
-        Thread.sleep(1000); // Horrible but not entirely sure what element on the page to wait for to avoid having to Thread.sleep()
-        if (expected.equalsIgnoreCase("is")) {
-            assertThat(bookingsPage.bookingExists(booking)).isTrue();
-        } else {
-            assertThat(bookingsPage.bookingExists(booking)).isFalse();
-        }
-    }
-
-    @When("^the user deletes the booking")
-    public void theUserDeletesTheBooking() throws InterruptedException {
-        Booking booking = Serenity.sessionVariableCalled("booking");
-
-        bookingsPage.open();
-        Thread.sleep(1000); // Horrible but not entirely sure what element on the page to wait for to avoid having to Thread.sleep()
-        bookingsPage.deleteBooking(booking);
-    }
-
-    @After
-    public void teardown() {
-        bookingsPage.deleteAllBookingsForTearDown();
+        return bookingsPage.bookingExists(booking);
     }
 }

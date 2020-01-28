@@ -5,7 +5,6 @@ Feature: User can manage hotel bookings
     Then the booking is displayed in the bookings list
 
   Scenario: User can delete a booking
-    Given user adds a new booking
-    And the booking is displayed in the bookings list
+    Given there is an existing booking
     When the user deletes the booking
     Then the booking is not displayed in the bookings list
