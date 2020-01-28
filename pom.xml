@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity-core.version>2.1.0</serenity-core.version>
+        <serenity-core.version>2.0.90</serenity-core.version>
         <serenity-cucumber.version>1.9.51</serenity-cucumber.version>
         <slf4j.version>1.7.30</slf4j.version>
         <assertj-core.version>1.7.0</assertj-core.version>
@@ -93,6 +93,27 @@
                         <surefire.rerunFailingTestsCount>1</surefire.rerunFailingTestsCount>
                     </systemProperties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.serenity-bdd.maven.plugins</groupId>
+                <artifactId>serenity-maven-plugin</artifactId>
+                <version>${serenity-core.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.serenity-bdd</groupId>
+                        <artifactId>serenity-core</artifactId>
+                        <version>${serenity-core.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>serenity-reports</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
