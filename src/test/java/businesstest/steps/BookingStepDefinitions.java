@@ -2,11 +2,11 @@ package businesstest.steps;
 
 import businesstest.model.Booking;
 import businesstest.pages.BookingsPage;
+import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import net.serenitybdd.core.Serenity;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,14 +30,30 @@ public class BookingStepDefinitions {
         );
     }
 
-    @Then("^the booking is displayed in the bookings list")
-    public void theBookingIsDisplayedInTheBookingsList() throws InterruptedException {
+    @Then("^the booking (is|is not) displayed in the bookings list")
+    public void theBookingIsDisplayedInTheBookingsList(String expected) throws InterruptedException {
         Booking booking = Serenity.sessionVariableCalled("booking");
-        String bookingDetails = booking.firstName + "\n" + booking.surname + "\n" + booking.price + "\n" + booking.depositPaid + "\n" + booking.checkInDate + "\n" + booking.checkOutDate;
 
         bookingsPage.open();
         Thread.sleep(1000); // Horrible but not entirely sure what element on the page to wait for to avoid having to Thread.sleep()
-        List<String> retrievedBookingDetails = bookingsPage.retrieveBookings();
-        assertThat(retrievedBookingDetails.stream().anyMatch(b -> b.equals(bookingDetails))).isTrue();
+        if (expected.equalsIgnoreCase("is")) {
+            assertThat(bookingsPage.bookingExists(booking)).isTrue();
+        } else {
+            assertThat(bookingsPage.bookingExists(booking)).isFalse();
+        }
+    }
+
+    @When("^the user deletes the booking")
+    public void theUserDeletesTheBooking() throws InterruptedException {
+        Booking booking = Serenity.sessionVariableCalled("booking");
+
+        bookingsPage.open();
+        Thread.sleep(1000); // Horrible but not entirely sure what element on the page to wait for to avoid having to Thread.sleep()
+        bookingsPage.deleteBooking(booking);
+    }
+
+    @After
+    public void teardown() {
+        bookingsPage.deleteAllBookingsForTearDown();
     }
 }
